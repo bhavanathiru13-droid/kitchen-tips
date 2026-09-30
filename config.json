@@ -1,0 +1,17 @@
+{
+  "domain_name": "Kitchen Tips",
+  "bot_name": "Kitchen Tips Bot",
+  "knowledge_file": "data/knowledge.json",
+  "greeting": "Vanakkam! Ask me a kitchen question, like storing vegetables or fixing a recipe, and I'll share a quick tip.",
+  "suggestions": [
+    "How to store coriander?",
+    "Soft idli",
+    "Stop onion tears",
+    "Fix salty curry",
+    "Fridge smell"
+  ],
+  "fallback": "Sorry, I don't know that one yet. Try another word, or add it to data/knowledge.json.",
+  "fuzzy_cutoff": 0.78,
+  "keyword_min_score": 0.34,
+  "port": 8003
+}

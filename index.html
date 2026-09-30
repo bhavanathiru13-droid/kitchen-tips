@@ -1,0 +1,23 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{{BOT_NAME}}</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#f5ecd9 repeating-linear-gradient(0deg,transparent 0 31px,#ecdfc3 31px 32px);font-family:Georgia,'Times New Roman',serif;color:#4a3426}
+.wrap{max-width:720px;margin:0 auto;padding:30px 18px}
+.hero{text-align:center;margin-bottom:22px}.hero .ic{font-size:46px}.hero h1{margin:4px 0;font-size:34px;color:#b5482a;font-style:italic}.hero p{margin:0;color:#8a6a55}
+.search{display:flex;background:#fff;border:2px solid #b5482a;border-radius:40px;overflow:hidden;box-shadow:0 6px 16px rgba(120,60,30,.15)}
+.search input{flex:1;border:0;padding:15px 22px;font-size:16px;font-family:inherit;outline:none}.search button{background:#b5482a;color:#fff;border:0;padding:0 26px;font-size:15px;cursor:pointer;font-family:inherit}
+#chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0 22px}.chip{background:#fff8ea;border:1px dashed #b5482a;color:#b5482a;padding:6px 14px;border-radius:20px;font-size:13px;cursor:pointer}.chip:hover{background:#b5482a;color:#fff}
+.note{background:#fffdf6;border-radius:4px;padding:18px 22px;margin-bottom:18px;box-shadow:0 4px 12px rgba(90,50,20,.18);border-top:8px solid #e9a23b;position:relative;transform:rotate(-.4deg)}.note:nth-child(even){transform:rotate(.5deg);border-top-color:#7a9a5b}
+.ask{font-size:12px;color:#a48a76;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px}.note h2{margin:0 0 6px;font-size:21px;color:#b5482a}.note p{margin:0;line-height:1.6;font-size:16px}
+.tip{margin-top:12px;padding:9px 12px;background:#f3e6c4;border-radius:6px;font-size:14px;font-style:italic}
+</style></head><body><div class="wrap"><div class="hero"><div class="ic">🍳</div><h1>{{BOT_NAME}}</h1><p>Quick, simple tips for a happier kitchen</p></div>
+<div class="search"><input id="q" placeholder="e.g. How to store coriander?" autocomplete="off"><button id="go">Ask 🥄</button></div><div id="chips"></div><div id="log"></div></div>
+<script>
+const CHIPS={{CHIPS}}, GREETING={{GREETING}};
+async function ask(m){try{const r=await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:m})});return await r.json()}catch(e){return {answer:'Server not reachable.',tip:''}}}
+
+const log=document.getElementById('log'),q=document.getElementById('q');
+function note(ask,a,t,tip){const d=document.createElement('div');d.className='note';if(ask){const x=document.createElement('div');x.className='ask';x.textContent='You asked: '+ask;d.appendChild(x)}if(t){const h=document.createElement('h2');h.textContent=t;d.appendChild(h)}const p=document.createElement('p');p.textContent=a;d.appendChild(p);if(tip){const z=document.createElement('div');z.className='tip';z.textContent='👩‍🍳 Chef tip: '+tip;d.appendChild(z)}log.prepend(d)}
+async function send(m){m=(m||q.value).trim();if(!m)return;q.value='';const j=await ask(m);note(m,j.answer,j.term,j.tip)}
+CHIPS.forEach(c=>{const e=document.createElement('div');e.className='chip';e.textContent=c;e.onclick=()=>send(c);document.getElementById('chips').appendChild(e)});
+document.getElementById('go').onclick=()=>send();q.addEventListener('keydown',e=>{if(e.key=='Enter')send()});note('',GREETING,'Welcome!','');
+</script></body></html>
